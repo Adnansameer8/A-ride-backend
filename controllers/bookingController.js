@@ -6,29 +6,24 @@ const createBooking = async (req, res) => {
   try {
     const { customerName, phone, email, type, price, details } = req.body;
 
-    // Extract the data from the details object so it saves in the new columns
-    const locationLink = details?.locationLink || null;
-    const bikeNumber = details?.bikeNumber || null;
-    const paymentMode = details?.paymentMode || null;
-    const distanceKm = details?.distanceKm || null;
-    const eta = details?.eta || null;
-    const extraDetails = details?.extraDetails || null;
+    const locationLink     = details?.locationLink    || null;
+    const bikeNumber       = details?.bikeNumber      || null;
+    const paymentMode      = details?.paymentMode     || null;
+    const distanceKm       = details?.distanceKm      || null;
+    const eta              = details?.eta             || null;
+    const extraDetails     = details?.extraDetails    || null;
+    // ── NEW ──
+    const bikeName         = details?.bikeName        || null;
+    const bikeColor        = details?.bikeColor       || null;
+    const issueDescription = details?.description     || null;
 
     const booking = await Booking.create({
       userId: req.user.id,
-      customerName,
-      phone,
-      email,
-      type,
-      price,
-      // Save directly to the new database columns
-      locationLink,
-      bikeNumber,
-      paymentMode,
-      distanceKm,
-      eta,
-      extraDetails,
-      details // Keep backup of original JSON
+      customerName, phone, email, type, price,
+      locationLink, bikeNumber, paymentMode,
+      distanceKm, eta, extraDetails,
+      bikeName, bikeColor, issueDescription,  // ← NEW
+      details,
     });
 
     res.status(201).json({ success: true, booking });
@@ -81,14 +76,12 @@ const updateBookingStatus = async (req, res) => {
       booking.price = parseFloat(req.body.price);
     }
 
-    if (req.body.details || req.body.status) {
-      booking.details = { 
-        ...booking.details, 
-        ...req.body.details,
-        statusUpdatedBy: req.user.name, 
-        statusUpdatedAt: new Date().toISOString() 
-      };
-    }
+        booking.details = {
+      ...(booking.details || {}),
+      ...(req.body.details || {}),       // safely spreads only if it exists
+      statusUpdatedBy: req.user.name,
+      statusUpdatedAt: new Date().toISOString(),
+    };
 
     await booking.save();
     res.json({ success: true, booking });

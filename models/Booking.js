@@ -63,7 +63,18 @@ const Booking = sequelize.define('Booking', {
     allowNull: true,
   },
   // ─────────────────────────────────────────────
-
+  bikeName: {
+  type: DataTypes.STRING,
+  allowNull: true,
+  },
+  bikeColor: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  issueDescription: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
   details: {
     type: DataTypes.JSONB, 
     // We keep this as a backup for older bookings

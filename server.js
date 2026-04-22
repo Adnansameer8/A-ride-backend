@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const tripRoutes = require('./routes/tripRoutes'); 
 const supportRoutes = require('./routes/supportRoutes');
+const servicesRoutes = require('./routes/servicesRoutes');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/trips', tripRoutes);
 
 app.use('/api/support/tickets', supportRoutes);
+app.use('/api/services', servicesRoutes); 
 // Database Sync and Server Start
 const PORT = process.env.PORT || 5000;
 
